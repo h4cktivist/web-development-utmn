@@ -30,7 +30,7 @@
                 <li class="list-group-item"><strong>Описание:</strong> {{ $team->description }}</li>
             </ul>
             <div class="mt-3 d-flex justify-content-between">
-                <button class="btn btn-secondary mr-2">Редактировать</button>
+                <a href="{{ route('teams.edit', $team->id) }}"><button class="btn btn-secondary mr-2">Редактировать</button></a>
                 <form action="{{ route('teams.destroy', $team->id) }}" method="POST" style="display: inline-block;">
                     @csrf
                     @method('DELETE')

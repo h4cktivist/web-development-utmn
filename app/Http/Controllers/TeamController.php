@@ -10,18 +10,18 @@ class TeamController extends Controller
     public function index()
     {
         $teams = Team::all();
-        return view('index', compact('teams'));
+        return view('teams.index', compact('teams'));
     }
 
     public function show(string $id)
     {
         $team = Team::findOrFail($id);
-        return view('show', compact('team'));
+        return view('teams.show', compact('team'));
     }
 
     public function create()
     {
-        return view('create_edit');
+        return view('teams.create');
     }
 
     public function store(Request $request)
@@ -49,6 +49,36 @@ class TeamController extends Controller
         $team->save();
 
         return redirect()->route('teams.index');
+    }
+
+    public function edit(string $id)
+    {
+        $team = Team::findOrFail($id);
+        return view('teams.edit', compact('team'));
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'original_name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'summary' => 'required|string',
+            'description'=> 'required|string',
+            'image' => 'image|max:2048'
+        ]);
+
+        $team = Team::findOrFail($id);
+        $team->update($request->all());
+
+        if ($request->hasFile('logo')) {
+            $image = $request->file('image');
+            $filename = $image->store('images', 'public');
+            $team->logo = $filename;
+            $team->save();
+        }
+
+        return redirect()->route('teams.show', ['id' => $team->id]);
     }
 
     public function destroy(string $id)
