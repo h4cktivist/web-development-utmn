@@ -13,7 +13,7 @@ class TeamController extends Controller
         return view('teams.index', compact('teams'));
     }
 
-    public function show(string $id)
+    public function show(int $id)
     {
         $team = Team::findOrFail($id);
         return view('teams.show', compact('team'));
@@ -41,23 +41,20 @@ class TeamController extends Controller
         $team->country = $request->input('country');
         $team->summary = $request->input('summary');
         $team->description = $request->input('description');
-
-        $image = $request->file('image');
-        $filename = $image->store('images', 'public');
-        $team->logo = $filename;
+        $team->logo = $request->file('image');
 
         $team->save();
 
         return redirect()->route('teams.index');
     }
 
-    public function edit(string $id)
+    public function edit(int $id)
     {
         $team = Team::findOrFail($id);
         return view('teams.edit', compact('team'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, int $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -71,17 +68,15 @@ class TeamController extends Controller
         $team = Team::findOrFail($id);
         $team->update($request->all());
 
-        if ($request->hasFile('logo')) {
-            $image = $request->file('image');
-            $filename = $image->store('images', 'public');
-            $team->logo = $filename;
+        if ($request->file('image')) {
+            $team->logo = $request->file('image');
             $team->save();
         }
 
         return redirect()->route('teams.show', ['id' => $team->id]);
     }
 
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
         $team = Team::findOrFail($id);
         $team->delete();

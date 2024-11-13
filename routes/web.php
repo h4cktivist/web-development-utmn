@@ -4,14 +4,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [TeamController::class, 'index'])->name('teams.index');
+Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
 Route::get('team/{id}', [TeamController::class, 'show'])->name('teams.show');
 
 Route::get('teams/create', [TeamController::class, 'create'])->name('teams.create');
 Route::post('teams', [TeamController::class, 'store'])->name('teams.store');
 
 Route::get('team/{id}/edit', [TeamController::class, 'edit'])->name('teams.edit');
-Route::patch('teams/{id}', [TeamController::class, 'update'])->name('teams.update');
+Route::patch('team/{id}', [TeamController::class, 'update'])->name('teams.update');
 
 Route::delete('/team/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
 

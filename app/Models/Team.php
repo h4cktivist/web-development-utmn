@@ -18,4 +18,12 @@ class Team extends Model
         'description',
         'logo'
     ];
+
+    public function setLogoAttribute($value)
+    {
+        if ($value) {
+            $filename = $value->store('images', 'public');
+            $this->attributes['logo'] = $filename;
+        }
+    }
 }
