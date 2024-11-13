@@ -27,7 +27,7 @@
 
                 <div class="col text-start pb-3">
                     <div class="card p-3 h-100">
-                        <img src="{{ url("storage/images/{$team->logo}") }}" class="card-img-top img-fluid p-5">
+                        <img src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
                         <div class="badge position-absolute mt-2 ms-2 bg-secondary text-dark">{{ $team->country }}</div>
                         <div class="card-body">
                             <h5 class="card-title">{{ $team->name }}</h5>
@@ -40,7 +40,7 @@
             @endforeach
 
         @else
-            <div class="h4 text-start my-3">Записей пока нет</div>
+            <div class="h5 text-start my-3">Записей пока нет</div>
         @endif
 
     </div>
@@ -57,20 +57,6 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
-
-
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <strong class="me-auto ms-2">Загрузка...</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-danger">
-            На данный момент этот функционал недоступен!
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

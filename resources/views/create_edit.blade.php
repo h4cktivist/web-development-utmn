@@ -20,7 +20,6 @@
 <div class="container text-center">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center mb-4">Добавить клуб</h2>
             <form enctype="multipart/form-data" method="post" action="{{ route('teams.store') }}">
                 @csrf
                 <div class="form-group">
@@ -70,20 +69,6 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
-
-
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <strong class="me-auto ms-2">Загрузка...</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-danger">
-            На данный момент этот функционал недоступен!
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

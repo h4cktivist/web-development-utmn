@@ -22,7 +22,7 @@
         <div class="h2 text-start my-3">{{ $team->name }}</div>
         <div class="col-md-6">
             <div class="text-center mb-4">
-                <img src="{{ url("storage/images/{$team->logo}") }}" alt="Логотип" class="img-fluid" style="max-width: 250px;">
+                <img src="{{ url("storage/{$team->logo}") }}" alt="Логотип" class="img-fluid" style="max-width: 250px;">
             </div>
             <ul class="list-group">
                 <li class="list-group-item"><strong>Название:</strong> <a href="#" class="link-underline link-underline-opacity-0 text-black" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{ $team->original_name }}">{{ $team->name }}</a></li>
@@ -31,7 +31,11 @@
             </ul>
             <div class="mt-3 d-flex justify-content-between">
                 <button class="btn btn-secondary mr-2">Редактировать</button>
-                <button class="btn btn-danger">Удалить</button>
+                <form action="{{ route('teams.destroy', $team->id) }}" method="POST" style="display: inline-block;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
             </div>
         </div>
     </div>
@@ -48,20 +52,6 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
-
-
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            <strong class="me-auto ms-2">Загрузка...</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body text-danger">
-            На данный момент этот функционал недоступен!
-        </div>
-    </div>
-</div>
 
 </body>
 </html>

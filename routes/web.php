@@ -10,6 +10,8 @@ Route::get('team/{id}', [TeamController::class, 'show'])->name('teams.show');
 Route::get('teams/create', [TeamController::class, 'create'])->name('teams.create');
 Route::post('teams', [TeamController::class, 'store'])->name('teams.store');
 
+Route::delete('/team/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
