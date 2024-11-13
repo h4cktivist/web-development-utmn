@@ -1,11 +1,10 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::get('/', [TeamController::class, 'index'])->name('teams.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
