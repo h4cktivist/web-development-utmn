@@ -3,28 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class TeamController extends Controller
 {
-    public function index()
+    public function index(): View
     {
         $teams = Team::all();
         return view('teams.index', compact('teams'));
     }
 
-    public function show(int $id)
+    public function show(int $id): View
     {
         $team = Team::findOrFail($id);
         return view('teams.show', compact('team'));
     }
 
-    public function create()
+    public function create(): View
     {
         return view('teams.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -48,13 +50,13 @@ class TeamController extends Controller
         return redirect()->route('teams.index');
     }
 
-    public function edit(int $id)
+    public function edit(int $id): View
     {
         $team = Team::findOrFail($id);
         return view('teams.edit', compact('team'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -76,7 +78,7 @@ class TeamController extends Controller
         return redirect()->route('teams.show', ['id' => $team->id]);
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $team = Team::findOrFail($id);
         $team->delete();
