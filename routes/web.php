@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/', function () {
+    return redirect()->route('teams.index');
+});
+
 Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
 Route::get('team/{id}', [TeamController::class, 'show'])->name('teams.show');
 
