@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Футбольные клубы</title>
+    <title>Добавить ФК</title>
     @vite(['resources/sass/styles.sass', 'resources/js/index.js'])
 </head>
 <body>
