@@ -9,15 +9,15 @@ Route::get('/', function () {
 });
 
 Route::get('/teams', [TeamController::class, 'index'])->name('teams.index');
-Route::get('team/{id}', [TeamController::class, 'show'])->name('teams.show');
 
 Route::get('teams/create', [TeamController::class, 'create'])->name('teams.create');
 Route::post('teams', [TeamController::class, 'store'])->name('teams.store');
 
-Route::get('team/{id}/edit', [TeamController::class, 'edit'])->name('teams.edit');
-Route::patch('team/{id}', [TeamController::class, 'update'])->name('teams.update');
+Route::get('teams/{id}', [TeamController::class, 'show'])->name('teams.show');
+Route::get('teams/{id}/edit', [TeamController::class, 'edit'])->name('teams.edit');
+Route::patch('teams/{id}', [TeamController::class, 'update'])->name('teams.update');
 
-Route::delete('/team/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
+Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
 
 
 Route::get('/dashboard', function () {
