@@ -6,12 +6,21 @@ use App\Models\Team;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
-    public function index(): View
+    public function index(Request $request)
     {
-        $teams = Team::all();
+        $userId = $request->query('user');
+        if (empty($userId)) {
+            $user = Auth::user();
+            $teams = $user->teams()->get();
+        }
+        else {
+            $teams = Team::where('user_id', $userId)->get();
+        }
+
         return view('teams.index', compact('teams'));
     }
 
@@ -44,6 +53,7 @@ class TeamController extends Controller
         $team->summary = $request->input('summary');
         $team->description = $request->input('description');
         $team->logo = $request->file('image');
+        $team->user_id = Auth::user()->getAuthIdentifier();
 
         $team->save();
 

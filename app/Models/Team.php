@@ -16,7 +16,8 @@ class Team extends Model
         'country',
         'summary',
         'description',
-        'logo'
+        'logo',
+        'user_id'
     ];
 
     public function setLogoAttribute($value)
@@ -25,5 +26,10 @@ class Team extends Model
             $filename = $value->store('images', 'public');
             $this->attributes['logo'] = $filename;
         }
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
