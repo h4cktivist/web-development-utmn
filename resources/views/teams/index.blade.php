@@ -31,7 +31,11 @@
             @foreach($teams as $team)
 
                 <div class="col text-start pb-3">
+                    @if($team->trashed())
+                    <div class="card p-3 h-100" style="background-color: gray">
+                    @else
                     <div class="card p-3 h-100">
+                    @endif
                         <img src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
                         <div class="badge position-absolute mt-2 ms-2 bg-secondary text-dark">{{ $team->country }}</div>
                         <div class="card-body">

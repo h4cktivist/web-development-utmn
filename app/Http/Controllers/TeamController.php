@@ -18,7 +18,12 @@ class TeamController extends Controller
             $teams = $currentUser->teams()->get();
         }
         else {
-            $teams = Team::where('user_id', $userId)->get();
+            if ($currentUser->is_admin) {
+                $teams = Team::where('user_id', $userId)->withTrashed()->get();
+            }
+            else {
+                $teams = Team::where('user_id', $userId)->get();
+            }
         }
 
         return view('teams.index', compact('teams', 'currentUser'));
@@ -27,13 +32,19 @@ class TeamController extends Controller
     public function show(int $id): View
     {
         $currentUser = Auth::user();
-        $team = Team::findOrFail($id);
+        if ($currentUser->is_admin) {
+            $team = Team::withTrashed()->findOrFail($id);
+        }
+        else {
+            $team = Team::findOrFail($id);
+        }
         return view('teams.show', compact('team', 'currentUser'));
     }
 
     public function create(): View
     {
-        return view('teams.create');
+        $currentUser = Auth::user();
+        return view('teams.create', compact('currentUser'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -63,8 +74,9 @@ class TeamController extends Controller
 
     public function edit(int $id): View
     {
+        $currentUser = Auth::user();
         $team = Team::findOrFail($id);
-        return view('teams.edit', compact('team'));
+        return view('teams.edit', compact('team', 'currentUser'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
@@ -94,6 +106,20 @@ class TeamController extends Controller
         $team = Team::findOrFail($id);
         $team->delete();
 
+        return redirect()->route('teams.index');
+    }
+
+    public function restore(int $id)
+    {
+        $team = Team::withTrashed()->findOrFail($id);
+        $team->restore();
+        return redirect()->route('teams.show', ['id' => $id]);
+    }
+
+    public function delete(int $id)
+    {
+        $team = Team::withTrashed()->findOrFail($id);
+        $team->forceDelete();
         return redirect()->route('teams.index');
     }
 }

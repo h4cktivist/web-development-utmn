@@ -13,7 +13,12 @@
             <img src="{{ url('storage/images/football.png') }}" class="align-text-top bg-secondary p-1" width="50" height="50">
             <div class="d-flex align-items-center justify-content-center ms-3 my-3">Футбольные клубы</div>
         </a>
-        <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
+        <div class="align-content-center">
+            <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
+            @if ($currentUser->is_admin)
+                <a href="{{ route('admin.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Админ</button></a>
+            @endif
+        </div>
     </div>
 </nav>
 
@@ -30,13 +35,27 @@
                 <li class="list-group-item"><strong>Описание:</strong> {{ $team->description }}</li>
             </ul>
 
-            @if($currentUser->is_admin || $team->user_id == $currentUser->id)
+            @if(($currentUser->is_admin || $team->user_id == $currentUser->id) && !$team->trashed())
             <div class="mt-3 d-flex justify-content-between">
                 <a href="{{ route('teams.edit', $team->id) }}"><button class="btn btn-secondary mr-2">Редактировать</button></a>
                 <form action="{{ route('teams.destroy', $team->id) }}" method="POST" style="display: inline-block;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+            @elseif($currentUser->is_admin && $team->trashed())
+            <div class="mt-3 d-flex justify-content-between">
+                <form action="{{ route('teams.restore', $team->id) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-success">Восстановить</button>
+                </form>
+
+                <form action="{{ route('teams.delete', $team->id) }}" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-danger">Удалить окончательно</button>
                 </form>
             </div>
             @endif
