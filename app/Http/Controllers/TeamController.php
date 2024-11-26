@@ -26,8 +26,9 @@ class TeamController extends Controller
 
     public function show(int $id): View
     {
+        $currentUser = Auth::user();
         $team = Team::findOrFail($id);
-        return view('teams.show', compact('team'));
+        return view('teams.show', compact('team', 'currentUser'));
     }
 
     public function create(): View

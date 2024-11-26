@@ -29,6 +29,8 @@
                 <li class="list-group-item"><strong>Страна:</strong> {{ $team->country }}</li>
                 <li class="list-group-item"><strong>Описание:</strong> {{ $team->description }}</li>
             </ul>
+
+            @if($currentUser->is_admin || $team->user_id == $currentUser->id)
             <div class="mt-3 d-flex justify-content-between">
                 <a href="{{ route('teams.edit', $team->id) }}"><button class="btn btn-secondary mr-2">Редактировать</button></a>
                 <form action="{{ route('teams.destroy', $team->id) }}" method="POST" style="display: inline-block;">
@@ -37,6 +39,8 @@
                     <button type="submit" class="btn btn-danger">Удалить</button>
                 </form>
             </div>
+            @endif
+
         </div>
     </div>
 </div>
