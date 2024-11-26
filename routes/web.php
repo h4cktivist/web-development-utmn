@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('teams/{id}', [TeamController::class, 'update'])->name('teams.update');
 
     Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
+
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });
 
 

@@ -13,15 +13,15 @@ class TeamController extends Controller
     public function index(Request $request)
     {
         $userId = $request->query('user');
+        $currentUser = Auth::user();
         if (empty($userId)) {
-            $user = Auth::user();
-            $teams = $user->teams()->get();
+            $teams = $currentUser->teams()->get();
         }
         else {
             $teams = Team::where('user_id', $userId)->get();
         }
 
-        return view('teams.index', compact('teams'));
+        return view('teams.index', compact('teams', 'currentUser'));
     }
 
     public function show(int $id): View

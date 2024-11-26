@@ -13,42 +13,36 @@
             <img src="{{ url('storage/images/football.png') }}" class="align-text-top bg-secondary p-1" width="50" height="50">
             <div class="d-flex align-items-center justify-content-center ms-3 my-3">Футбольные клубы</div>
         </a>
-        <div class="align-content-center">
-            <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
-            @if ($currentUser->is_admin)
-                <a href="{{ route('admin.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Админ</button></a>
-            @endif
-        </div>
     </div>
 </nav>
 
 <div class="container text-center">
-    <div class="h2 text-start my-3">Футбольные клубы</div>
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3 align-content-center">
+    <h1>Все пользователи</h1>
 
-        @if (count($teams) > 0)
-
-            @foreach($teams as $team)
-
-                <div class="col text-start pb-3">
-                    <div class="card p-3 h-100">
-                        <img src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
-                        <div class="badge position-absolute mt-2 ms-2 bg-secondary text-dark">{{ $team->country }}</div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $team->name }}</h5>
-                            <p class="card-text">{{ $team->summary }}</p>
-                            <a href="{{ route('teams.show', ['id' => $team->id]) }}" class="btn btn-secondary">Подробнее</a>
-                        </div>
-                    </div>
-                </div>
-
-            @endforeach
-
-        @else
-            <div class="h5 text-start my-3">Записей пока нет</div>
-        @endif
-
-    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Администратор</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($users as $user)
+            <tr>
+                <td>{{ $user->id }}</td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->is_admin ? 'Да' : 'Нет' }}</td>
+                <td>
+                    <a href="{{ route('teams.index') }}?user={{ $user->id }}" class="btn btn-primary btn-sm">Посмотреть записи</a>
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
 </div>
 
 <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
