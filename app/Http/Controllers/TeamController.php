@@ -40,7 +40,9 @@ class TeamController extends Controller
         else {
             $team = Team::findOrFail($id);
         }
-        return view('teams.show', compact('team', 'currentUser'));
+        $games = $team->allGames();
+        $otherTeams = Team::where('id', '!=', $team->id)->get();
+        return view('teams.show', compact('team', 'currentUser', 'games', 'otherTeams'));
     }
 
     public function create(): View

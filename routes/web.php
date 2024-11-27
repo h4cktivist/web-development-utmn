@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/teams/{id}/delete', [TeamController::class, 'delete'])->name('teams.delete');
 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+
+    Route::post('/teams/{team}/games', [GameController::class, 'store'])->name('teams.matches.store');
 });
 
 

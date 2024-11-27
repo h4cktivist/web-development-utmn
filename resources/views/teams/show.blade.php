@@ -66,6 +66,59 @@
 
         </div>
     </div>
+
+    <form method="POST" action="{{ route('teams.matches.store', $team) }}">
+        @csrf
+        <div class="mb-3">
+            <label for="away_team_id" class="form-label">Соперник</label>
+            <select class="form-select" id="away_team_id" name="away_team_id">
+                @foreach ($otherTeams as $otherTeam)
+                    <option value="{{ $otherTeam->id }}">{{ $otherTeam->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="match_date" class="form-label">Дата матча</label>
+            <input type="date" class="form-control" id="match_date" name="match_date">
+        </div>
+        <div class="mb-3">
+            <label for="stadium_name" class="form-label">Стадион</label>
+            <input class="form-control" id="stadium_name" name="stadium_name">
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+
+    @if ($games->count() > 0)
+
+        <table class="table table-striped mt-5">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Соперник</th>
+                <th>Стадион</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach ($team->allGames as $game)
+                <tr>
+                    <td>{{ $game->match_date }}</td>
+                    <td>
+                        @if ($game->home_team_id == $team->id)
+                            <a href="{{ route('teams.show', ['id' => $game->away_team_id]) }}">{{ $game->awayTeam->name }}</a> (В гостях)
+                        @else
+                            <a href="{{ route('teams.show', ['id' => $game->home_team_id]) }}">{{ $game->homeTeam->name }}</a> (Дома)
+                        @endif
+                    </td>
+                    <td>{{ $game->stadium_name }}</td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+
+    @else
+        <h5 class="mt-5">Пока нет матчей с участием этой команды</h5>
+    @endif
+
 </div>
 
 <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">

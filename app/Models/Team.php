@@ -33,6 +33,22 @@ class Team extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function homeGames()
+    {
+        return $this->hasMany(Game::class, 'home_team_id');
+    }
+
+    public function awayGames()
+    {
+        return $this->hasMany(Game::class, 'away_team_id');
+    }
+
+    public function allGames()
+    {
+        return $this->hasMany(Game::class, 'home_team_id')
+            ->unionAll($this->hasMany(Game::class, 'away_team_id'));
+    }
+
     protected static function boot()
     {
         parent::boot();
