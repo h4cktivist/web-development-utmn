@@ -15,6 +15,7 @@
         </a>
         <div class="align-content-center">
             <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
+            <a href="{{ route('friends.teams.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Клубы друзей</button></a>
             @if ($currentUser->is_admin)
                 <a href="{{ route('admin.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Админ</button></a>
             @endif

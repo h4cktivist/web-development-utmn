@@ -15,6 +15,7 @@
         </a>
         <div class="align-content-center">
             <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
+            <a href="{{ route('friends.teams.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Клубы друзей</button></a>
             @if ($currentUser->is_admin)
                 <a href="{{ route('admin.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Админ</button></a>
             @endif
@@ -37,6 +38,23 @@
                 <li class="list-group-item"><strong>Название:</strong> <a href="#" class="link-underline link-underline-opacity-0 text-black" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{ $team->original_name }}">{{ $team->name }}</a></li>
                 <li class="list-group-item"><strong>Страна:</strong> {{ $team->country }}</li>
                 <li class="list-group-item"><strong>Описание:</strong> {{ $team->description }}</li>
+                <li class="list-group-item"><strong>Добавлено пользователем:</strong> {{ $team->user->name }}</li>
+                <li class="list-group-item">
+                    @if($team->user->id != Auth::user()->id)
+                        @if (Auth::user()->isFriendsWith($team->user))
+                            <form method="POST" action="{{ route('users.removeFriend', $team->user) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Удалить пользователя из друзей</button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('users.addFriend', $team->user) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-primary btn-sm">Добавить пользователя в друзья</button>
+                            </form>
+                        @endif
+                    @endif
+                </li>
             </ul>
 
             @if(($currentUser->is_admin || $team->user_id == $currentUser->id) && !$team->trashed())
@@ -85,7 +103,7 @@
             <label for="stadium_name" class="form-label">Стадион</label>
             <input class="form-control" id="stadium_name" name="stadium_name">
         </div>
-        <button type="submit" class="btn btn-primary">Добавить</button>
+        <button type="submit" class="btn btn-primary">Добавить матч</button>
     </form>
 
     @if ($games->count() > 0)
@@ -120,7 +138,7 @@
                                 <button type="submit" class="btn btn-danger btn-sm">Удалить из друзей</button>
                             </form>
                         @elseif($game->user->id == Auth::user()->id)
-                            <p>{{ $game->user->name }}</p>
+                            <p>{{ $game->user->name }} (Вы)</p>
                         @else
                             <p>{{ $game->user->name }}</p>
                             <form method="POST" action="{{ route('users.addFriend', $game->user) }}">

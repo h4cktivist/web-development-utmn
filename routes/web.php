@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FriendController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
@@ -32,6 +33,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/users/{user}/add-friend', [UserController::class, 'addFriend'])->name('users.addFriend');
     Route::delete('/users/{user}/remove-friend', [UserController::class, 'removeFriend'])->name('users.removeFriend');
+
+    Route::get('/friends/teams', [FriendController::class, 'index'])->name('friends.teams.index');
 });
 
 

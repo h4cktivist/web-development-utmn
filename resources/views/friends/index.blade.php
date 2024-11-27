@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Футбольные клубы</title>
+    <title>Футбольные клубы друзей</title>
     @vite(['resources/sass/styles.sass', 'resources/js/index.js'])
 </head>
 <body>
@@ -54,7 +54,7 @@
             @endforeach
 
         @else
-            <div class="h5 text-start my-3">Записей пока нет</div>
+            <div class="h5 text-start my-3">Ваши друзья пока не добавили клубы</div>
         @endif
 
     </div>
