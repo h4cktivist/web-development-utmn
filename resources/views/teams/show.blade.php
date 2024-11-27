@@ -18,6 +18,10 @@
             @if ($currentUser->is_admin)
                 <a href="{{ route('admin.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Админ</button></a>
             @endif
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" id="liveToastBtn" class="btn btn-secondary">Выйти</button>
+            </form>
         </div>
     </div>
 </nav>

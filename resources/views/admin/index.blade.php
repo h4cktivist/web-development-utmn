@@ -13,7 +13,14 @@
             <img src="{{ url('storage/images/football.png') }}" class="align-text-top bg-secondary p-1" width="50" height="50">
             <div class="d-flex align-items-center justify-content-center ms-3 my-3">Футбольные клубы</div>
         </a>
+        <div class="align-content-center">
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" id="liveToastBtn" class="btn btn-secondary">Выйти</button>
+            </form>
+        </div>
     </div>
+
 </nav>
 
 <div class="container text-center">
