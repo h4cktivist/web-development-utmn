@@ -22,7 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/teams/{id}', [TeamController::class, 'destroy'])->name('teams.destroy');
 
     Route::patch('/teams/{id}/restore', [TeamController::class, 'restore'])->name('teams.restore');
-    Route::patch('/teams/{id}', [TeamController::class, 'delete'])->name('teams.delete');
+    Route::delete('/teams/{id}/delete', [TeamController::class, 'delete'])->name('teams.delete');
 
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });

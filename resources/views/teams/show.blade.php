@@ -54,7 +54,7 @@
 
                 <form action="{{ route('teams.delete', $team->id) }}" method="POST">
                     @csrf
-                    @method('PATCH')
+                    @method('DELETE')
                     <button type="submit" class="btn btn-danger">Удалить окончательно</button>
                 </form>
             </div>

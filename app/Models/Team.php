@@ -32,4 +32,33 @@ class Team extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($team) {
+            $currentUser = auth()->user();
+
+            if (!$currentUser->is_admin && $team->user_id !== $currentUser->id) {
+                abort(403, 'Вы можете редактировать только свои команды.');
+            }
+        });
+
+        static::deleting(function ($team) {
+            $currentUser = auth()->user();
+
+            if (!$currentUser->is_admin && $team->user_id !== $currentUser->id) {
+                abort(403, 'Вы можете удалять только свои команды.');
+            }
+        });
+
+        static::restoring(function ($team) {
+            $currentUser = auth()->user();
+
+            if (!$currentUser->is_admin) {
+                abort(403, 'Только администратор может восстанавливать команды.');
+            }
+        });
+    }
 }
