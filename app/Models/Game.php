@@ -15,6 +15,7 @@ class Game extends Model
         'away_team_id',
         'stadium_name',
         'match_date',
+        'user_id',
     ];
 
     public function user()

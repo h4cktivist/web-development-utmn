@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
@@ -28,6 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
     Route::post('/teams/{team}/games', [GameController::class, 'store'])->name('teams.matches.store');
+
+    Route::post('/users/{user}/add-friend', [UserController::class, 'addFriend'])->name('users.addFriend');
+    Route::delete('/users/{user}/remove-friend', [UserController::class, 'removeFriend'])->name('users.removeFriend');
 });
 
 

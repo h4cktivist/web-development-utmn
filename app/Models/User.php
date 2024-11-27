@@ -50,4 +50,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(Team::class, 'user_id');
     }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+            ->withTimestamps();
+    }
+
+    public function isFriendsWith(User $user): bool
+    {
+        return $this->friends()->where('friendships.friend_id', $user->id)->exists();
+    }
+
+    public function addFriend(User $user)
+    {
+        return $this->friends()->save($user);
+    }
+
+    public function removeFriend(User $user)
+    {
+        return $this->friends()->detach($user);
+    }
 }

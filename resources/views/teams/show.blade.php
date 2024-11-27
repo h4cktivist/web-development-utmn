@@ -96,6 +96,7 @@
                 <th>Дата</th>
                 <th>Соперник</th>
                 <th>Стадион</th>
+                <th>Добавлено пользователем</th>
             </tr>
             </thead>
             <tbody>
@@ -110,6 +111,24 @@
                         @endif
                     </td>
                     <td>{{ $game->stadium_name }}</td>
+                    <td>
+                        @if (Auth::user()->isFriendsWith($game->user))
+                        <p class="text-success">{{ $game->user->name }} (Ваш друг)</p>
+                            <form method="POST" action="{{ route('users.removeFriend', $game->user) }}">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Удалить из друзей</button>
+                            </form>
+                        @elseif($game->user->id == Auth::user()->id)
+                            <p>{{ $game->user->name }}</p>
+                        @else
+                            <p>{{ $game->user->name }}</p>
+                            <form method="POST" action="{{ route('users.addFriend', $game->user) }}">
+                                @csrf
+                                <button type="submit" class="btn btn-primary btn-sm">Добавить в друзья</button>
+                            </form>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
             </tbody>
