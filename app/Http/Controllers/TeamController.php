@@ -81,6 +81,9 @@ class TeamController extends Controller
 
     public function update(Request $request, int $id): RedirectResponse
     {
+        $team = Team::findOrFail($id);
+        $this->authorize('update-team', $team);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'original_name' => 'required|string|max:255',
@@ -90,7 +93,6 @@ class TeamController extends Controller
             'image' => 'image|max:2048'
         ]);
 
-        $team = Team::findOrFail($id);
         $team->update($request->all());
 
         if ($request->file('image')) {
@@ -104,6 +106,8 @@ class TeamController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $team = Team::findOrFail($id);
+        $this->authorize('delete-team', $team);
+
         $team->delete();
 
         return redirect()->route('teams.index');
@@ -111,14 +115,18 @@ class TeamController extends Controller
 
     public function restore(int $id)
     {
-        $team = Team::withTrashed()->findOrFail($id);
+        $team = Team::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore-team', $team);
+
         $team->restore();
         return redirect()->route('teams.show', ['id' => $id]);
     }
 
     public function delete(int $id)
     {
-        $team = Team::withTrashed()->findOrFail($id);
+        $team = Team::onlyTrashed()->findOrFail($id);
+        $this->authorize('force-delete-team', $team);
+
         $team->forceDelete();
         return redirect()->route('teams.index');
     }
