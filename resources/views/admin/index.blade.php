@@ -44,7 +44,7 @@
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->is_admin ? 'Да' : 'Нет' }}</td>
                 <td>
-                    <a href="{{ route('teams.index') }}?user={{ $user->id }}" class="btn btn-primary btn-sm">Посмотреть записи</a>
+                    <a href="{{ route('teams.index') }}?user={{ $user->name }}" class="btn btn-primary btn-sm">Посмотреть записи</a>
                 </td>
             </tr>
         @endforeach

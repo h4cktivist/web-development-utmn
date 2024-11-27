@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,17 +13,18 @@ class TeamController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = $request->query('user');
+        $username = $request->query('user');
+        $user = User::where('name', $username)->first();
         $currentUser = Auth::user();
-        if (empty($userId)) {
+        if (empty($username) || !$user) {
             $teams = $currentUser->teams()->get();
         }
         else {
             if ($currentUser->is_admin) {
-                $teams = Team::where('user_id', $userId)->withTrashed()->get();
+                $teams = Team::where('user_id', $user->id)->withTrashed()->get();
             }
             else {
-                $teams = Team::where('user_id', $userId)->get();
+                $teams = Team::where('user_id', $user->id)->get();
             }
         }
 
