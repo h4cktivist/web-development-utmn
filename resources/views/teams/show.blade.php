@@ -14,6 +14,7 @@
             <div class="d-flex align-items-center justify-content-center ms-3 my-3">Футбольные клубы</div>
         </a>
         <div class="align-content-center">
+            <a href="{{ route('teams.index') }}?user={{ $currentUser->name }}"><button id="liveToastBtn" class="btn btn-secondary">Мои клубы</button></a>
             <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
             <a href="{{ route('friends.teams.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Клубы друзей</button></a>
             @if ($currentUser->is_admin)
@@ -38,7 +39,7 @@
                 <li class="list-group-item"><strong>Название:</strong> <a href="#" class="link-underline link-underline-opacity-0 text-black" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{ $team->original_name }}">{{ $team->name }}</a></li>
                 <li class="list-group-item"><strong>Страна:</strong> {{ $team->country }}</li>
                 <li class="list-group-item"><strong>Описание:</strong> {{ $team->description }}</li>
-                <li class="list-group-item"><strong>Добавлено пользователем:</strong> {{ $team->user->name }}</li>
+                <li class="list-group-item"><strong>Добавлено пользователем:</strong> <a href="{{ route('teams.index') }}?user={{ $team->user->name }}">{{ $team->user->name }}</a></li>
                 <li class="list-group-item">
                     @if($team->user->id != Auth::user()->id)
                         @if (Auth::user()->isFriendsWith($team->user))

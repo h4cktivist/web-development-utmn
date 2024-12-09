@@ -14,6 +14,7 @@
             <div class="d-flex align-items-center justify-content-center ms-3 my-3">Футбольные клубы</div>
         </a>
         <div class="align-content-center">
+            <a href="{{ route('teams.index') }}?user={{ $currentUser->name }}"><button id="liveToastBtn" class="btn btn-secondary">Мои клубы</button></a>
             <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
             <a href="{{ route('friends.teams.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Клубы друзей</button></a>
             @if ($currentUser->is_admin)

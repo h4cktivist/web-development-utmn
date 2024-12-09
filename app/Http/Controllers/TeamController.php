@@ -17,7 +17,7 @@ class TeamController extends Controller
         $user = User::where('name', $username)->first();
         $currentUser = Auth::user();
         if (empty($username) || !$user) {
-            $teams = $currentUser->teams()->get();
+            $teams = Team::all();
         }
         else {
             if ($currentUser->is_admin) {
@@ -133,5 +133,11 @@ class TeamController extends Controller
 
         $team->forceDelete();
         return redirect()->route('teams.index');
+    }
+
+    public function restShow(Request $request)
+    {
+        $teams = Team::all();
+        return response()->json($teams);
     }
 }

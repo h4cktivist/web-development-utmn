@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Футбольные клубы друзей</title>
+    <title>Профиль</title>
     @vite(['resources/sass/styles.sass', 'resources/js/index.js'])
+    @csrf
 </head>
 <body>
 <nav class="bg-primary navbar navbar-expand-lg p-0 m-2">
@@ -28,36 +29,17 @@
     </div>
 </nav>
 
+
 <div class="container text-center">
-    <div class="h2 text-start my-3">Футбольные клубы</div>
-    <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-3 align-content-center">
-
-        @if (count($teams) > 0)
-
-            @foreach($teams as $team)
-
-                <div class="col text-start pb-3">
-                    @if($team->trashed())
-                    <div class="card p-3 h-100" style="background-color: gray">
-                    @else
-                    <div class="card p-3 h-100">
-                    @endif
-                        <img src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
-                        <div class="badge position-absolute mt-2 ms-2 bg-secondary text-dark">{{ $team->country }}</div>
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $team->name }}</h5>
-                            <p class="card-text">{{ $team->summary }}</p>
-                            <a href="{{ route('teams.show', ['id' => $team->id]) }}" class="btn btn-secondary">Подробнее</a>
-                        </div>
-                    </div>
-                </div>
-
-            @endforeach
-
-        @else
-            <div class="h5 text-start my-3">Ваши друзья пока не добавили клубы</div>
-        @endif
-
+    <div class="row justify-content-center">
+        <div class="h2 text-start my-3">{{ $currentUser->name }}</div>
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Имя пользователя:</strong> {{ $currentUser->name }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ $currentUser->email }}</li>
+                <li class="list-group-item"><strong>OAuth2 токен:</strong> <button class="btn btn-sm" onclick="generateAndCopyToken()">Получить и скопировать токен</button></li>
+            </ul>
+        </div>
     </div>
 </div>
 
@@ -72,6 +54,33 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
+
+<script>
+    async function generateAndCopyToken() {
+        try {
+            let csrfToken = document.querySelector("input[name='_token']").value;
+            console.log(csrfToken);
+            const response = await fetch('/generate-token', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            if (data.token) {
+                await navigator.clipboard.writeText(data.token);
+                alert('Токен скопирован!');
+            } else {
+                alert('Ошибка получения токена!');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка!');
+        }
+    }
+</script>
 
 </body>
 </html>

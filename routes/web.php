@@ -31,6 +31,9 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/teams/{team}/games', [GameController::class, 'store'])->name('teams.matches.store');
 
+    Route::get('/users/profile', [UserController::class, 'show'])->name('user.show');
+    Route::post('/generate-token', [UserController::class, 'generateToken']);
+
     Route::post('/users/{user}/add-friend', [UserController::class, 'addFriend'])->name('users.addFriend');
     Route::delete('/users/{user}/remove-friend', [UserController::class, 'removeFriend'])->name('users.removeFriend');
 
