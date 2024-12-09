@@ -138,6 +138,12 @@ class TeamController extends Controller
     public function restShow(Request $request)
     {
         $teams = Team::all();
-        return response()->json($teams);
+        $teamData = [];
+        foreach ($teams as $team) {
+            $team_array = $team->toArray();
+            $team_array["is_fiend_record"] = $team->isFriendRecord;
+            $teamData[] = $team_array;
+        }
+        return response()->json($teamData);
     }
 }

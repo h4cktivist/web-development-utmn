@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Team extends Model
 {
@@ -26,6 +27,11 @@ class Team extends Model
             $filename = $value->store('images', 'public');
             $this->attributes['logo'] = $filename;
         }
+    }
+
+    public function getIsFriendRecordAttribute()
+    {
+        return Auth::user()->isFriendsWith($this->user);
     }
 
     public function user()
