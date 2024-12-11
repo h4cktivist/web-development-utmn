@@ -42,7 +42,7 @@
                     @else
                     <div class="card p-3 h-100">
                     @endif
-                        <img src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
+                        <img id="logo" src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
                         <div class="badge position-absolute mt-2 ms-2 bg-secondary text-dark">{{ $team->country }}</div>
                         <div class="card-body">
                             <h5 class="card-title">{{ $team->name }}</h5>
@@ -60,6 +60,7 @@
 
     </div>
 </div>
+</div>
 
 <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
     <div class="col-md-4 d-flex align-items-center ms-4">
@@ -72,6 +73,18 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
+
+<script>
+    let imageElements = document.querySelectorAll('img');
+
+    for (let i = 0; i < imageElements.length; i++) {
+        let imageElement = imageElements[i];
+        let src = imageElement.src;
+        if (src.includes("http://127.0.0.1:8000/storage/http")) {
+            imageElement.src = src.split("http://127.0.0.1:8000/storage/")[1];
+        }
+    }
+</script>
 
 </body>
 </html>

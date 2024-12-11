@@ -33,7 +33,7 @@
         <div class="h2 text-start my-3">{{ $team->name }}</div>
         <div class="col-md-6">
             <div class="text-center mb-4">
-                <img src="{{ url("storage/{$team->logo}") }}" alt="Логотип" class="img-fluid" style="max-width: 250px;">
+                <img id="logo" src="{{ url("storage/{$team->logo}") }}" alt="Логотип" class="img-fluid" style="max-width: 250px;">
             </div>
             <ul class="list-group">
                 <li class="list-group-item"><strong>Название:</strong> <a href="#" class="link-underline link-underline-opacity-0 text-black" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="{{ $team->original_name }}">{{ $team->name }}</a></li>
@@ -170,6 +170,17 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
+
+<script>
+    let imageElement = document.querySelector('#logo');
+    let src = imageElement.src;
+    console.log(src);
+
+    if (src.includes("http://127.0.0.1:8000/storage/http")) {
+        console.log("sdfsdfsdfds");
+        imageElement.src = src.split("http://127.0.0.1:8000/storage/")[1];
+    }
+</script>
 
 </body>
 </html>
