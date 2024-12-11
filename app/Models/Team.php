@@ -23,9 +23,13 @@ class Team extends Model
 
     public function setLogoAttribute($value)
     {
-        if ($value) {
+        if ($value && method_exists($value, 'getClientOriginalExtension')) {
             $filename = $value->store('images', 'public');
             $this->attributes['logo'] = $filename;
+        }
+        else
+        {
+            $this->attributes['logo'] = $value;
         }
     }
 

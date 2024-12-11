@@ -6,5 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 Route::middleware('auth:passport')->group(function () {
-    Route::get('/teams', [TeamController::class, 'restShow']);
+    Route::get('/teams', [TeamController::class, 'restIndex']);
+    Route::get('/teams/{id}', [TeamController::class, 'restShow']);
+
+    Route::post('/teams', [TeamController::class, 'restStore']);
+    Route::put('/teams/{id}', [TeamController::class, 'restUpdate']);
 });

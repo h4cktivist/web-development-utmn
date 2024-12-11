@@ -135,15 +135,64 @@ class TeamController extends Controller
         return redirect()->route('teams.index');
     }
 
-    public function restShow(Request $request)
+    public function restIndex()
     {
         $teams = Team::all();
         $teamData = [];
         foreach ($teams as $team) {
             $team_array = $team->toArray();
-            $team_array["is_fiend_record"] = $team->isFriendRecord;
+            $team_array["is_friend_record"] = $team->isFriendRecord;
             $teamData[] = $team_array;
         }
         return response()->json($teamData);
+    }
+
+    public function restShow(int $id)
+    {
+        $team = Team::findOrFail($id);
+        $team["is_friend_record"] = $team->isFriendRecord;
+        return response()->json($team);
+    }
+
+    public function restStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'original_name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'summary' => 'required|string',
+            'description'=> 'required|string',
+            'logo' => 'required|string',
+        ]);
+
+        $team = new Team;
+        $team->name = $request->input('name');
+        $team->original_name = $request->input('original_name');
+        $team->country = $request->input('country');
+        $team->summary = $request->input('summary');
+        $team->description = $request->input('description');
+        $team->logo = $request->input('logo');
+        $team->user_id = Auth::user()->getAuthIdentifier();
+
+        $team->save();
+
+        return response()->json($team);
+    }
+
+    public function restUpdate(Request $request, $id)
+    {
+        $team = Team::findOrFail($id);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'original_name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'summary' => 'required|string',
+            'description'=> 'required|string',
+            'logo' => 'required|string',
+        ]);
+
+        $team->update($request->all());
+
+        return response()->json($team);
     }
 }
