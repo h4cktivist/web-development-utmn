@@ -13,7 +13,18 @@
             <img src="{{ url('storage/images/football.png') }}" class="align-text-top bg-secondary p-1" width="50" height="50">
             <div class="d-flex align-items-center justify-content-center ms-3 my-3">Футбольные клубы</div>
         </a>
-        <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
+        <div class="align-content-center">
+            <a href="{{ route('teams.index') }}?user={{ $currentUser->name }}"><button id="liveToastBtn" class="btn btn-secondary">Мои клубы</button></a>
+            <a href="{{ route('teams.create') }}"><button id="liveToastBtn" class="btn btn-secondary">Добавить</button></a>
+            <a href="{{ route('friends.teams.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Клубы друзей</button></a>
+            @if ($currentUser->is_admin)
+                <a href="{{ route('admin.index') }}"><button id="liveToastBtn" class="btn btn-secondary">Админ</button></a>
+            @endif
+            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                @csrf
+                <button type="submit" id="liveToastBtn" class="btn btn-secondary">Выйти</button>
+            </form>
+        </div>
     </div>
 </nav>
 

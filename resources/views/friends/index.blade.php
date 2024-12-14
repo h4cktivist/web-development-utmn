@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Футбольные клубы</title>
+    <title>Футбольные клубы друзей</title>
     @vite(['resources/sass/styles.sass', 'resources/js/index.js'])
 </head>
 <body>
@@ -38,15 +38,11 @@
 
                 <div class="col text-start pb-3">
                     @if($team->trashed())
-                        <div class="card p-3 h-100" style="background-color: gray">
+                    <div class="card p-3 h-100" style="background-color: gray">
                     @else
-                        <div class="card p-3 h-100">
+                    <div class="card p-3 h-100">
                     @endif
-                        @if(str_contains($team->logo, 'http'))
-                            <img id="logo" src="{{ url("{$team->logo}") }}" class="card-img-top img-fluid p-5">
-                        @else
-                            <img id="logo" src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
-                        @endif
+                        <img src="{{ url("storage/{$team->logo}") }}" class="card-img-top img-fluid p-5">
                         <div class="badge position-absolute mt-2 ms-2 bg-secondary text-dark">{{ $team->country }}</div>
                         <div class="card-body">
                             <h5 class="card-title">{{ $team->name }}</h5>
@@ -59,11 +55,10 @@
             @endforeach
 
         @else
-            <div class="h5 text-start my-3">Записей пока нет</div>
+            <div class="h5 text-start my-3">Ваши друзья пока не добавили клубы</div>
         @endif
 
     </div>
-</div>
 </div>
 
 <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">

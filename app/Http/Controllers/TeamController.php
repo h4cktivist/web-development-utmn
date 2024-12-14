@@ -3,27 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
-    public function index(): View
+    public function index(Request $request)
     {
-        $teams = Team::all();
-        return view('teams.index', compact('teams'));
+        $username = $request->query('user');
+        $user = User::where('name', $username)->first();
+        $currentUser = Auth::user();
+        if (empty($username) || !$user) {
+            $teams = Team::all();
+        }
+        else {
+            if ($currentUser->is_admin) {
+                $teams = Team::where('user_id', $user->id)->withTrashed()->get();
+            }
+            else {
+                $teams = Team::where('user_id', $user->id)->get();
+            }
+        }
+
+        return view('teams.index', compact('teams', 'currentUser'));
     }
 
     public function show(int $id): View
     {
-        $team = Team::findOrFail($id);
-        return view('teams.show', compact('team'));
+        $currentUser = Auth::user();
+        if ($currentUser->is_admin) {
+            $team = Team::withTrashed()->findOrFail($id);
+        }
+        else {
+            $team = Team::findOrFail($id);
+        }
+        $games = $team->allGames();
+        $otherTeams = Team::where('id', '!=', $team->id)->get();
+        return view('teams.show', compact('team', 'currentUser', 'games', 'otherTeams'));
     }
 
     public function create(): View
     {
-        return view('teams.create');
+        $currentUser = Auth::user();
+        return view('teams.create', compact('currentUser'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -44,6 +69,7 @@ class TeamController extends Controller
         $team->summary = $request->input('summary');
         $team->description = $request->input('description');
         $team->logo = $request->file('image');
+        $team->user_id = Auth::user()->getAuthIdentifier();
 
         $team->save();
 
@@ -52,12 +78,16 @@ class TeamController extends Controller
 
     public function edit(int $id): View
     {
+        $currentUser = Auth::user();
         $team = Team::findOrFail($id);
-        return view('teams.edit', compact('team'));
+        return view('teams.edit', compact('team', 'currentUser'));
     }
 
     public function update(Request $request, int $id): RedirectResponse
     {
+        $team = Team::findOrFail($id);
+        $this->authorize('update-team', $team);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'original_name' => 'required|string|max:255',
@@ -67,7 +97,6 @@ class TeamController extends Controller
             'image' => 'image|max:2048'
         ]);
 
-        $team = Team::findOrFail($id);
         $team->update($request->all());
 
         if ($request->file('image')) {
@@ -81,8 +110,89 @@ class TeamController extends Controller
     public function destroy(int $id): RedirectResponse
     {
         $team = Team::findOrFail($id);
+        $this->authorize('delete-team', $team);
+
         $team->delete();
 
         return redirect()->route('teams.index');
+    }
+
+    public function restore(int $id)
+    {
+        $team = Team::onlyTrashed()->findOrFail($id);
+        $this->authorize('restore-team', $team);
+
+        $team->restore();
+        return redirect()->route('teams.show', ['id' => $id]);
+    }
+
+    public function delete(int $id)
+    {
+        $team = Team::onlyTrashed()->findOrFail($id);
+        $this->authorize('force-delete-team', $team);
+
+        $team->forceDelete();
+        return redirect()->route('teams.index');
+    }
+
+    public function restIndex()
+    {
+        $teams = Team::all();
+        $teamData = [];
+        foreach ($teams as $team) {
+            $team_array = $team->toArray();
+            $team_array["is_friend_record"] = $team->isFriendRecord;
+            $teamData[] = $team_array;
+        }
+        return response()->json($teamData);
+    }
+
+    public function restShow(int $id)
+    {
+        $team = Team::findOrFail($id);
+        $team["is_friend_record"] = $team->isFriendRecord;
+        return response()->json($team);
+    }
+
+    public function restStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'original_name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'summary' => 'required|string',
+            'description'=> 'required|string',
+            'logo' => 'required|string',
+        ]);
+
+        $team = new Team;
+        $team->name = $request->input('name');
+        $team->original_name = $request->input('original_name');
+        $team->country = $request->input('country');
+        $team->summary = $request->input('summary');
+        $team->description = $request->input('description');
+        $team->logo = $request->input('logo');
+        $team->user_id = Auth::user()->getAuthIdentifier();
+
+        $team->save();
+
+        return response()->json($team);
+    }
+
+    public function restUpdate(Request $request, $id)
+    {
+        $team = Team::findOrFail($id);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'original_name' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'summary' => 'required|string',
+            'description'=> 'required|string',
+            'logo' => 'required|string',
+        ]);
+
+        $team->update($request->all());
+
+        return response()->json($team);
     }
 }

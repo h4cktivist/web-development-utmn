@@ -6,11 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens as PassportHasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, PassportHasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -44,5 +45,31 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function teams()
+    {
+        return $this->hasMany(Team::class, 'user_id');
+    }
+
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friendships', 'user_id', 'friend_id')
+            ->withTimestamps();
+    }
+
+    public function isFriendsWith(User $user): bool
+    {
+        return $this->friends()->where('friendships.friend_id', $user->id)->exists();
+    }
+
+    public function addFriend(User $user)
+    {
+        return $this->friends()->save($user);
+    }
+
+    public function removeFriend(User $user)
+    {
+        return $this->friends()->detach($user);
     }
 }

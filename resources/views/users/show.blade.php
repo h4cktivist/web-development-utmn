@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Добавить ФК</title>
+    <title>Профиль</title>
     @vite(['resources/sass/styles.sass', 'resources/js/index.js'])
+    @csrf
 </head>
 <body>
 <nav class="bg-primary navbar navbar-expand-lg p-0 m-2">
@@ -28,43 +29,16 @@
     </div>
 </nav>
 
+
 <div class="container text-center">
     <div class="row justify-content-center">
+        <div class="h2 text-start my-3">{{ $currentUser->name }}</div>
         <div class="col-md-6">
-            <form enctype="multipart/form-data" method="post" action="{{ route('teams.store') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="name">Название:</label>
-                    <input type="text" class="form-control m-2" id="name" name="name" placeholder="Введите название футбольного клуба">
-                    @error('name') <p class="text-danger">{{ $message }}</p> @enderror
-                </div>
-                <div class="form-group">
-                    <label for="original_name">Оригинальное название:</label>
-                    <input type="text" class="form-control m-2" id="original_name" name="original_name" placeholder="Введите оригинальное название футбольного клуба">
-                    @error('original_name') <p class="text-danger">{{ $message }}</p> @enderror
-                </div>
-                <div class="form-group">
-                    <label for="country">Страна:</label>
-                    <input type="text" class="form-control m-2" id="country" name="country" placeholder="Введите страну">
-                    @error('country') <p class="text-danger">{{ $message }}</p> @enderror
-                </div>
-                <div class="form-group">
-                    <label for="summary">Краткое описание:</label>
-                    <textarea class="form-control m-2" id="summary" name="summary" rows="3" placeholder="Введите краткое описание"></textarea>
-                    @error('summary') <p class="text-danger">{{ $message }}</p> @enderror
-                </div>
-                <div class="form-group">
-                    <label for="description">Полное описание:</label>
-                    <textarea class="form-control m-2" id="description" name="description" rows="3" placeholder="Введите полное описание"></textarea>
-                    @error('description') <p class="text-danger">{{ $message }}</p> @enderror
-                </div>
-                <div class="form-group">
-                    <label for="image">Логотип:</label>
-                    <input type="file" class="form-control-file m-2" id="image" name="image">
-                    @error('image') <p class="text-danger">{{ $message }}</p> @enderror
-                </div>
-                <button type="submit" class="btn btn-primary mt-4">Сохранить</button>
-            </form>
+            <ul class="list-group">
+                <li class="list-group-item"><strong>Имя пользователя:</strong> {{ $currentUser->name }}</li>
+                <li class="list-group-item"><strong>Email:</strong> {{ $currentUser->email }}</li>
+                <li class="list-group-item"><strong>OAuth2 токен:</strong> <button class="btn btn-sm" onclick="generateAndCopyToken()">Получить и скопировать токен</button></li>
+            </ul>
         </div>
     </div>
 </div>
@@ -80,6 +54,33 @@
         <li class="ms-3"><a href="https://t.me/h4cktiv1st"><img src="{{ url('storage/images/telegram.png') }}" width="30" height="24" class="d-inline-block align-text-top img-fluid"></a></li>
     </ul>
 </footer>
+
+<script>
+    async function generateAndCopyToken() {
+        try {
+            let csrfToken = document.querySelector("input[name='_token']").value;
+            console.log(csrfToken);
+            const response = await fetch('/generate-token', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            if (data.token) {
+                await navigator.clipboard.writeText(data.token);
+                alert('Токен скопирован!');
+            } else {
+                alert('Ошибка получения токена!');
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+            alert('Ошибка!');
+        }
+    }
+</script>
 
 </body>
 </html>
